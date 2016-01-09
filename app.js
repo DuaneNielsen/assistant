@@ -37,7 +37,6 @@ app.get('/', function(req, res){
   res.render('index', { title: 'Express', scripts: ['javascripts/global.js']});
 });
 
-
 app.use('/', routes);
 app.use('/users', users);
 
