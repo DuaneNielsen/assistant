@@ -2,6 +2,14 @@ var request = require('request');
 var fs = require('fs');
 var express = require('express');
 var router = express.Router();
+var schedule = require('node-schedule');
+
+// init scheduled jobs
+var j = schedule.scheduleJob('* * * * *', function(){
+    console.log('The answer to life, the universe, and everything!');
+    
+});
+
 
 /*
  * GET userlist.

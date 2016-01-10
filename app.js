@@ -4,6 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var schedule = require('node-schedule');
+
 // Database
 var mongo = require('mongodb');
 var db = require('monk')(process.env.IP+':27017/assistant');
@@ -12,6 +14,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
