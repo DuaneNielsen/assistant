@@ -10,6 +10,7 @@ var schedule = require('node-schedule');
 var mongo = require('mongodb');
 var db = require('monk')(process.env.IP+':27017/assistant');
 
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 

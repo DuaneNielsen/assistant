@@ -3,11 +3,12 @@ var fs = require('fs');
 var express = require('express');
 var router = express.Router();
 var schedule = require('node-schedule');
+var thedb = require('monk')('0.0.0.0:27017/assistant');
 
 // init scheduled jobs
 var j = schedule.scheduleJob('* * * * *', function(){
     console.log('The answer to life, the universe, and everything!');
-    
+    grabSVXY();
 });
 
 
@@ -48,17 +49,23 @@ router.delete('/deleteuser/:id', function(req, res) {
 });
 
 router.get('/getsvxy', function(req, res) {
+       grabSVXY();
+       res.send('');
+});
+
+function grabSVXY() {
     console.log('getSVXY called');
-    
-    var db = req.db;
     
     //Lets try to make a HTTP GET request to Proshares
     request('https://accounts.profunds.com/etfdata/ByFund/SVXY-psdlyhld.csv', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             console.log(body); // Show the HTML for the Modulus homepage.
+            //var my_db = require('../my_db').my_db();
+            var collect = thedb.get('svxy_holdings_results');
+            collect.insert({body: body}, function (err, result) {
+                console.log ( (err === null ) ? {msg: ''} : {msg: err} );
+            });
         }
-        
-        res.send('');
     
         // split into lines
         var lines = body.match(/[^\r\n]+/g);
@@ -80,7 +87,7 @@ router.get('/getsvxy', function(req, res) {
         
         console.log("wrote file to" +  filename);
         
-    });        
-});
+    });
+}
 
 module.exports = router;
