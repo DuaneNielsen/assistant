@@ -9,11 +9,18 @@ var pg = require('pg');
 var conString = 'postgres://postgres:_(PI-9pi_(PI@0.0.0.0/assistant';
 
 // init scheduled jobs
-var j = schedule.scheduleJob('* * * * *', function(){
-    console.log('running job');
+var grab_job = schedule.scheduleJob('30 11,16,20 * * *', function(){
+    console.log('running grabber job');
     grabSVXY();
+    console.log('grabber job completed');
 });
 
+// init process jobs
+var process_job = schedule.scheduleJob('31 11,16,20 * * *', function(){
+    console.log('running processor job');
+    processSVXYResults();
+    console.log('processor job completed');
+});
 
 /*
  * GET userlist.
@@ -54,7 +61,7 @@ router.delete('/deleteuser/:id', function(req, res) {
 router.get('/getsvxy', function(req, res) {
        grabSVXY();
        processSVXYResults();
-       writeToPosgres();
+       //writeToPostgres();
        res.send('');
 });
 
@@ -68,7 +75,7 @@ function grabSVXY() {
         if (!error && response.statusCode == 200) {
             var collect = thedb.get('svxy_holdings_results');
             collect.insert({body: body, processed: false }, function (err, result) {
-                console.log ( (err === null ) ? {msg:''} : {msg:err} );
+                if  (err !== null ) { console.log(err); };
             });
         }
         else {
@@ -85,17 +92,13 @@ function processSVXYResults() {
     var num_blobs_failed = 0;
     
     collect.find({processed: false})
-    .each ( function(blob) {
-        var err = null;
-        parseResultBlob(err,blob)
-        if ( err === null ) {
+    .each (function(blob) {
+        //var records;
+        parseResultBlob(blob);
+        //console.log(records);
             num_blobs_processed++;
             blob.processed = true;
-        }
-        else {
-            console.error('parse failed with error ' + err + ' for blob ' + blob.body);
-            num_blobs_failed++;
-        }
+        collect.updateById(blob._id,blob);
     })
     .error(function(err){
         // handle error
@@ -108,31 +111,41 @@ function processSVXYResults() {
     
 }
 
-function parseResultBlob(err, blob) {
+function parseResultBlob(blob, output) {
     
     var date = scanDate(blob.body);
 
     // split into lines and grab the effective lines
-    var lines = blob.body.match(/[^\r\n]+/g).splice(3,3);
+    var lines = blob.body.match(/[^\r\n]+/g).splice(3,4);
     
     // rejoin lines
     var csv_blob = lines.join('\n');
     
+    //console.log(csv_blob);
+    
     csv.parse(csv_blob, {columns: true, trim: true }, function (err, record ) {
-        if (err === null) {
-            
+        if (err) {
+            console.error(err);
+            output = null;
+        }
+        else {
             // add the date to each record
             for ( var i = 0; i < record.length; i++ ) {
                 record[i]['date'] = date;    
+                record[i]['type'] = i;  //dirty hack to identify cash/near future/far future
+                if ( record[i]['Market Value'] === '' ) { record[i]['Market Value'] = '0'; }
+                if ( record[i]['Shares/Contracts'] === '' ) { record[i]['Shares/Contracts'] = '0'; }
+                if ( record[i]['Exposure Value (Notional + G/L)'] === '' ) { record[i]['Exposure Value (Notional + G/L)'] = '0'; }
             }
-            //console.log(record);
-            return record;
-        }
-        else {
-            console.error(err);
-            this.err = err;
+            
+            for (var i = 0; i < record.length; i++) {
+                writeToPostgres(record[i]);
+            }
+
         }
     });
+    
+    //return record;
 }
 
 
@@ -148,7 +161,8 @@ function scanDate(body) {
 
 }
 
-function writeToPosgres() {
+
+function writeToPostgres(record) {
   // get a pg client from the connection pool
   pg.connect(conString, function(err, client, done) {
 
@@ -157,39 +171,33 @@ function writeToPosgres() {
       if(!err) return false;
 
       // An error occurred, remove the client from the connection pool.
-      // A truthy value passed to done will remove the connection from the pool
-      // instead of simply returning it to be reused.
-      // In this case, if we have successfully received a client (truthy)
-      // then it will be removed from the pool.
       if(client){
         done(client);
       }
-      //res.writeHead(500, {'content-type': 'text/plain'});
-      console.log('Posgres error ' + err);
+      console.log('Postgres: ' + err);
       return true;
     };
 
     // handle an error from the connection
     if(handleError(err)) return;
-
-    // record the visit
-    client.query('INSERT INTO visit (date) VALUES ($1)', [new Date()], function(err, result) {
-
-      // handle an error from the query
-      if(handleError(err)) return;
-
-      // get the total number of visits today (including the current visit)
-      client.query('SELECT COUNT(date) AS count FROM visit', function(err, result) {
-
-        // handle an error from the query
-        if(handleError(err)) return;
-
-        // return the client to the connection pool for other requests to reuse
-        done();
-        //res.writeHead(200, {'content-type': 'text/plain'});
-        console.log('You are visitor number ' + result.rows[0].count);
-      });
+    
+    // check if this record has already been recorded
+    client.query('SELECT COUNT (*) FROM d_hld_svxy WHERE (typeid) = $1 AND date = $2', [record['type'], new Date(record['date'])], function(err, result) {
+        if (handleError(err)) return;
+        // if it hasn't, record it
+        if ( result.rows[0].count <= 0 ) {
+            client.query('INSERT INTO d_hld_svxy (date, security, typeid, shares, exposure, marketvalue) VALUES ($1, $2, $3, $4, $5, $6) ',
+                [new Date(record['date']), record['Security Description'], record['type'], record['Shares/Contracts'], record['Exposure Value (Notional + G/L)'], record['Market Value'] ],
+                function(err, result) {
+                    if (handleError(err)) return;
+                    console.log('new record written')
+                }
+            );
+        }
     });
+    
+    done();
+    
   });
 }
 
@@ -212,5 +220,19 @@ function writeBodyToFile(body) {
         
         console.log("wrote file to" +  filename);
 }
+
+// var t = schedule.scheduleJob('0 0 0 0 0', function() {
+//     console.log('inserting test data');
+//   var content;
+//   var collection = thedb.get('svxy_holdings_results');
+//   fs.readFile('../SVXY-holdings-1-8-2016.csv', 'utf-8', function read(err, data) {
+//         if (err) { throw err;}
+//         content = data;
+//         console.log(typeof content);
+//         collection.insert({body: content, processed:false});
+//   });
+//   console.log('inserted test data');
+// });
+
 
 module.exports = router;

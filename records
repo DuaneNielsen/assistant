@@ -1,0 +1,12 @@
+{ 'Fund Ticker': 'SVXY',
+    'Fund Name': 'ProShares Short VIX Short-Term Futures ETF',
+    'Security Ticker': '',
+    'Security Sedol': '',
+    'Security Description': 'CBOE VIX Future 02/17/2016 (UXG6)',
+    Coupon: '',
+    'Maturity Date': '',
+    'Shares/Contracts': '-20343',
+    'Exposure Value (Notional + G/L)': '-469414725',
+    'Market Value': '',
+    undefined: '',
+    date: '1/8/2016' }
