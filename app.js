@@ -17,6 +17,7 @@ var users = require('./routes/users');
 var app = express();
 
 app.set(process.env.PORT, process.env.IP);
+console.log("server will listen on " + process.env.PORT + ":" + process.env.IP);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
