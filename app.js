@@ -16,6 +16,7 @@ var users = require('./routes/users');
 
 var app = express();
 
+app.set(process.env.PORT, process.env.IP);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -75,6 +76,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;
