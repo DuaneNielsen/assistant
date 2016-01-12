@@ -6,9 +6,18 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var schedule = require('node-schedule');
 
+// ENV variables
+var MONGO_IP;
+if ( process.env.NODE_ENV === 'production') {
+   MONGO_IP = process.env.MYMONGO_PORT_27017_TCP_ADDR;
+}
+else
+{
+  MONGO_IP = process.env.IP;
+}
 // Database
 var mongo = require('mongodb');
-var db = require('monk')(process.env.IP+':27017/assistant');
+var db = require('monk')(MONGO_IP+':27017/assistant');
 
 
 var routes = require('./routes/index');
