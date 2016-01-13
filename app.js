@@ -6,6 +6,18 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var schedule = require('node-schedule');
+var https = require('https');
+var fs = require('fs');
+
+console.log(__dirname);
+
+var serveropts = {
+  key: fs.readFileSync(path.join(__dirname,'private.key' )),
+  cert: fs.readFileSync(path.join(__dirname,'certificate.pem'))
+};
+
+//var secureServer = https.createServer(options, app).listen(443);
+
 
 // print config
 console.log("env is " + process.env.NODE_ENV);
@@ -82,5 +94,7 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+
+var httpsServer = https.createServer(serveropts, app);
 
 module.exports = app;
