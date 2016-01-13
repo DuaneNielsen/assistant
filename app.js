@@ -1,4 +1,5 @@
 var express = require('express');
+var config = require('config')[process.env.NODE_ENV];
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -6,18 +7,13 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var schedule = require('node-schedule');
 
-// ENV variables
-var MONGO_IP;
-if ( process.env.NODE_ENV === 'production') {
-   MONGO_IP = process.env.MYMONGO_PORT_27017_TCP_ADDR;
-}
-else
-{
-  MONGO_IP = process.env.IP;
-}
+// print config
+console.log("env is " + process.env.NODE_ENV);
+console.log("mongo ip: " + config.mongo.ip);
+
 // Database
 var mongo = require('mongodb');
-var db = require('monk')(MONGO_IP+':27017/assistant');
+var db = require('monk')(config.mongo.ip+':27017/assistant');
 
 
 var routes = require('./routes/index');

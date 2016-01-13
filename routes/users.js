@@ -1,12 +1,13 @@
+var config = require('config')[process.env.NODE_ENV];
 var request = require('request');
 var fs = require('fs');
 var express = require('express');
 var router = express.Router();
 var schedule = require('node-schedule');
-var thedb = require('monk')('0.0.0.0:27017/assistant');
+var thedb = require('monk')(config.mongo.ip+':27017/assistant');
 var csv = require('csv');
 var pg = require('pg');
-var conString = 'postgres://postgres:_(PI-9pi_(PI@0.0.0.0/assistant';
+var conString = config.postgres.connectstring;
 
 // init scheduled jobs
 var grab_job = schedule.scheduleJob('30 11,16,20 * * *', function(){
