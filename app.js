@@ -13,8 +13,11 @@ console.log(__dirname);
 
 var serveropts = {
   key: fs.readFileSync(path.join(__dirname,'private.key' )),
-  cert: fs.readFileSync(path.join(__dirname,'certificate.pem'))
+  cert: fs.readFileSync(path.join(__dirname,'certificate.pem')),
+  ca: fs.readFileSync(path.join(__dirname,'cert.csr'))
 };
+
+console.log(serveropts);
 
 //var secureServer = https.createServer(options, app).listen(443);
 
@@ -96,5 +99,7 @@ app.use(function(err, req, res, next) {
 });
 
 var httpsServer = https.createServer(serveropts, app);
+//var io = require('socket.io').listen(httpsServer);
+httpsServer.listen(8000);
 
 module.exports = app;
