@@ -1,12 +1,16 @@
 #!/usr/bin/env node
 
+console.log('starting from ./bin/www script');
+
 /**
  * Module dependencies.
  */
-
 var app = require('../app');
 var debug = require('debug')('workspace:server');
 var http = require('http');
+var https = require('https');
+var fs = require('fs');
+var path = require('path')
 
 /**
  * Get port from environment and store in Express.
@@ -16,14 +20,28 @@ var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
- * Create HTTP server.
+ * SSL options
  */
+ 
+var serveropts = {
+  key: fs.readFileSync(path.join(__dirname,'private.key' )),
+  cert: fs.readFileSync(path.join(__dirname,'certificate.pem')),
+  ca: fs.readFileSync(path.join(__dirname,'cert.csr'))
+};
 
-var server = http.createServer(app);
+console.log(serveropts);
 
 /**
- * Listen on provided port, on all network interfaces.
+ * Start up HTTP
  */
+
+console.log("server will listen on " + process.env.PORT + ":" + process.env.IP);
+
+// use ssl on prod
+if ( process.env.NODE_ENV === 'production' ) { var server = https.createServer(serveropts, app); }
+
+// use http otherwise
+else  { var server = http.createServer(app); }
 
 server.listen(port);
 server.on('error', onError);
