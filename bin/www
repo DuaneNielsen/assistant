@@ -29,8 +29,6 @@ var serveropts = {
   ca: fs.readFileSync(path.join(__dirname,'cert.csr'))
 };
 
-console.log(serveropts);
-
 /**
  * Start up HTTP
  */

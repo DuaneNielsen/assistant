@@ -9,6 +9,8 @@ var csv = require('csv');
 var pg = require('pg');
 var conString = config.postgres.connectstring;
 
+console.log(config);
+
 // init scheduled jobs
 var grab_job = schedule.scheduleJob('30 11,16,20 * * *', function(){
     console.log('running grabber job');
@@ -80,7 +82,12 @@ function grabSVXY() {
             });
         }
         else {
-            console.error("HTTP get to proshares failed with response " + response.statusCode + " " + error);
+            if ( typeof response != undefined ) {
+                console.error("HTTP get to proshares failed with response " + response.statusCode + " " + error);
+            }
+            else {
+                console.error('HTTP request failed, probably because we dont have network acesss to https://accounts.profunds.com/etfdata/ByFund/SVXY-psdlyhld.csv');
+            }
         }
         
     });
