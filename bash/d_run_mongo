@@ -1,0 +1,1 @@
+docker run -d -name mymongo mongo:2.6.11

@@ -1,0 +1,1 @@
+docker run -i -t --name assistant --link mymongo:mymongo --link some-postgres:some-postgres -p 8081:3000 duanenielsen/assistant
