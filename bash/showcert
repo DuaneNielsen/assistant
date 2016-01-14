@@ -1,1 +1,1 @@
-openssl s_client -tls1 -showcerts -connect localhost:8080 </dev/null
+openssl s_client -tls1 -showcerts -connect localhost:8080 -nbio -state </dev/null
