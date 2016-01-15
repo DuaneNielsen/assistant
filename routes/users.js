@@ -82,7 +82,7 @@ function grabSVXY() {
             });
         }
         else {
-            if ( typeof response != undefined ) {
+            if ( typeof response !== undefined ) {
                 console.error("HTTP get to proshares failed with response " + response.statusCode + " " + error);
             }
             else {
