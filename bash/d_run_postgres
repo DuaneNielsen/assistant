@@ -1,1 +1,1 @@
-docker run -i -t --name some-postgres -e POSTGRES_PASSWORD=2reel4me -d postgres:9.3.10
+docker run -i -t --name postgres -e POSTGRES_PASSWORD=2reel4me -d postgres:9.3.10
