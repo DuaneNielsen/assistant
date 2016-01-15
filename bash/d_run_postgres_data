@@ -1,0 +1,1 @@
+docker run -i -t --name postgres-data --net assistnet -v /var/lib/postgresql/data:/var/lib/postgresql/data -d postgres:9.3.10

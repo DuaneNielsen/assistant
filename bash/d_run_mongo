@@ -1,1 +1,1 @@
-docker run -d -name mymongo mongo:2.6.11
+docker run -d --name mongo --net assistnet -v mongo-data:/data/db mongo:2.6.11
