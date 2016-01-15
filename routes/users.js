@@ -73,8 +73,10 @@ router.get('/getsvxy', function(req, res) {
 function grabSVXY() {
     console.log('Reading data from proshares');
     
+    var url = 'https://accounts.profunds.com/etfdata/ByFund/SVXY-psdlyhld.csv';
+    
     //make a HTTP GET request to Proshares
-    request('https://accounts.profunds.com/etfdata/ByFund/SVXY-psdlyhld.csv', function (error, response, body) {
+    request(url, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             var collect = thedb.get('svxy_holdings_results');
             collect.insert({body: body, processed: false }, function (err, result) {
@@ -82,11 +84,11 @@ function grabSVXY() {
             });
         }
         else {
-            if ( typeof response !== undefined ) {
-                console.error("HTTP get to proshares failed with response " + response.statusCode + " " + error);
+            if ( typeof response !== 'undefined' ) {
+                console.error('HTTP get to ' + url + ' failed with response ' + response.statusCode + ' Error: ' + error);
             }
             else {
-                console.error('HTTP request failed, probably because we dont have network acesss to https://accounts.profunds.com/etfdata/ByFund/SVXY-psdlyhld.csv');
+                console.error('HTTP request to ' + url +' failed. Error: ' + error);
             }
         }
         
