@@ -45,6 +45,10 @@ app.get('/', function(req, res){
   res.render('index', { title: 'Express', scripts: ['javascripts/global.js']});
 });
 
+app.get('/hello', function(req, res) {
+  res.status(200).send('Hello world');
+});
+
 app.use('/', routes);
 app.use('/users', users);
 
@@ -80,5 +84,13 @@ app.use(function(err, req, res, next) {
   });
 });
 
+// test handles for mocha
+var server;
+var start = app.start = function start(port, callback) {
+  server = app.listen(port, callback);
+}
+var stop = app.stop = function stop(callback) {
+  server.close(callback);
+}
 
 module.exports = app;
