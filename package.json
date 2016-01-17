@@ -20,6 +20,8 @@
     "node-schedule" : "0.6.0",
     "csv" : "0.4.6",
     "pg" : "4.4.3",
+    "bluebird" : "3.0.6",
+    "pg-promise" : "2.8.6",
     "chai" : "3.4.1",
     "superagent" : "1.6.1",
     "mocha" : "2.3.4"
