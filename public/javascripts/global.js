@@ -10,9 +10,6 @@ $(document).ready(function() {
     
     
     // REGISTER CLICK CALLBACKS ===========================================
-
-    // Refresh button click
-    $('#btnRefresh').on('click', refresh);
     
     // Add User button click
     $('#btnAddUser').on('click', addUser);
@@ -160,19 +157,3 @@ function deleteUser(event) {
     }
 
 };
-
-//Refresh
-function refresh() {
-    // post the fields via ajax to the database
-    $.ajax({
-        type: 'GET',
-        url: '/users/getSVXY'
-    }).done( function(response) {
-        
-        // check the response is good (blank)
-        if (response.msg === '' ) {
-            // update the table
-            populateTable();
-        }
-    })
-}
