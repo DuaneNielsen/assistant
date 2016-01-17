@@ -19,7 +19,7 @@ describe ('user_test', function() {
     describe('when requested at /getSVXY', function() {
         it('should return table row', function(done) {
             
-            request.get('http://0.0.0.0:8080/users/getSVXY').end(function assert(err, res) {
+            request.get('http://0.0.0.0:8080/svxy/getSVXY').end(function assert(err, res) {
 
                 expect(err).to.not.be.ok;
                 expect(res).to.have.property('status', 200);
@@ -29,5 +29,8 @@ describe ('user_test', function() {
             });
         });
     });
+    
+    // next test here I think
+    
 });
 

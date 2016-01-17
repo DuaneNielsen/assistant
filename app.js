@@ -16,8 +16,11 @@ var mongo = require('mongodb');
 var db = require('monk')(config.mongo.ip+':27017/assistant');
 
 
+// routes
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var svxy = require('./routes/svxy');
 
 var app = express();
 
@@ -32,26 +35,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+// static mount points, used for javascript images etc..
 app.use('/files',express.static(path.join(__dirname, 'files')));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Make our db accessible to our router
+// Make our db accessible to our router  (Duane doesnt like this.. we should use require(config) instead)
 app.use(function(req,res,next){
     req.db = db;
     next();
 });
 
-app.get('/', function(req, res){
-  res.render('index', { title: 'Express', scripts: ['javascripts/global.js']});
-});
-
-app.get('/hello', function(req, res) {
-  res.status(200).send('Hello world');
-});
-
+// connect the routes
 app.use('/', routes);
 app.use('/users', users);
-
+app.use('/svxy', svxy);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
