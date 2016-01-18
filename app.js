@@ -13,8 +13,6 @@ console.log("mongo ip: " + config.mongo.ip);
 
 // Database
 var db = config.mongo.monk;
-//var db = require('monk')(config.mongo.ip+':27017/assistant');
-
 
 // routes
 
