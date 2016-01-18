@@ -1,0 +1,31 @@
+extends layout
+
+block extraHeader
+  script(type = 'text/javascript', src='javascripts/svxy.js')
+
+block content
+  h1= Hello
+    p Welcome to SVXY
+
+    // Wrapper
+    #wrapper
+
+        // svxylist
+        #svxyList
+            table
+                thead
+                    th date
+                    th security
+                    th typeid
+                    th shares
+                    th exposure
+                    th marketvalue
+                tbody
+        // /USER LIST
+        
+        // Refresh button
+        #getSVXY
+            fieldset
+            button#btnRefresh  Refresh
+
+    // /WRAPPER
