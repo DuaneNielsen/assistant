@@ -25,10 +25,16 @@ app.set('port', port);
  */
  
 var serveropts = {
-  key: fs.readFileSync(path.join(__dirname,'private.key' )),
-  cert: fs.readFileSync(path.join(__dirname,'certificate.pem')),
-  ca: fs.readFileSync(path.join(__dirname,'cert.csr'))
-};
+     key: fs.readFileSync(path.join(__dirname,'privkey.pem')),
+     cert: fs.readFileSync(path.join(__dirname,'fullchain.pem')),
+     ca: fs.readFileSync(path.join(__dirname,'chain.pem'))
+}
+ 
+//var serveropts = {
+//  key: fs.readFileSync(path.join(__dirname,'private.key' )),
+//  cert: fs.readFileSync(path.join(__dirname,'certificate.pem')),
+//  ca: fs.readFileSync(path.join(__dirname,'cert.csr'))
+//};
 
 /**
  * Start up HTTP

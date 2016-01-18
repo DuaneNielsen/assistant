@@ -2,3 +2,6 @@ openssl genrsa 2048  > private.key.enc
 openssl req -new -key private.key -out cert.csr
 openssl rsa -in private.key.enc -out private.key
 openssl x509 -req -in cert.csr -signkey private.key -out certificate.pem
+cp private.key privkey.pem
+cp certificate.pem fullchain.pem
+cp cert.csr chain.pem
