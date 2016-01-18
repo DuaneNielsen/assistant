@@ -16,18 +16,7 @@ $(document).ready(function() {
 
 //Refresh
 function refresh() {
-    // post the fields via ajax to the database
-    $.ajax({
-        type: 'GET',
-        url: '/svxy/getsvxy'
-    }).done( function(response) {
-        
-        // check the response is good (blank)
-        if (response.msg === '' ) {
-            // update the table
-            populateSVXY();
-        }
-    })
+    populateSVXY();
 }
 
 // Fill table with data
