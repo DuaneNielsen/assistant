@@ -43,7 +43,16 @@ var serveropts = {
 console.log("server will listen on " + process.env.PORT + ":" + process.env.IP);
 
 // use ssl on prod
-if ( process.env.NODE_ENV === 'production' ) { var server = https.createServer(serveropts, app); }
+if ( process.env.NODE_ENV === 'production' ) { 
+  var server = https.createServer(serveropts, app); 
+  
+  // redirect http urls to http
+  http.createServer(function (req, res) {
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
+  }).listen(80);
+
+}
 
 // use http otherwise
 else  { var server = http.createServer(app); }
