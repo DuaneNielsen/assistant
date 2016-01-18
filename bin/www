@@ -21,30 +21,14 @@ var port = config.port;
 app.set('port', port);
 
 /**
- * SSL options
- */
- 
-var serveropts = {
-     key: fs.readFileSync(path.join(__dirname,'privkey.pem')),
-     cert: fs.readFileSync(path.join(__dirname,'fullchain.pem')),
-     ca: fs.readFileSync(path.join(__dirname,'chain.pem'))
-}
- 
-//var serveropts = {
-//  key: fs.readFileSync(path.join(__dirname,'private.key' )),
-//  cert: fs.readFileSync(path.join(__dirname,'certificate.pem')),
-//  ca: fs.readFileSync(path.join(__dirname,'cert.csr'))
-//};
-
-/**
  * Start up HTTP
  */
 
-console.log("server will listen on " + process.env.PORT + ":" + process.env.IP);
+console.log("server will listen on " + process.env.IP + ":" + port);
 
 // use ssl on prod
 if ( process.env.NODE_ENV === 'production' ) { 
-  var server = https.createServer(serveropts, app); 
+  var server = https.createServer(config.httpsServerOptions, app); 
   
   // redirect http urls to http
   http.createServer(function (req, res) {
