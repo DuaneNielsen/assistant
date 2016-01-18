@@ -10,9 +10,11 @@ assistant:
   container_name: assistant
   net: "assistnet"
   ports:
-   - "443:8080"
+   - "443:443"
+   - "80:80"
   environment:
    - "POSTGRES_PASSWORD=${PASSWORD}"
+   - "PORT=443"
 mongo:
   image: mongo:2.6.11
   container_name: mongo
