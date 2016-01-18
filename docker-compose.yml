@@ -12,7 +12,7 @@ assistant:
   ports:
    - "8080:8080"
   environment:
-   - "POSTGRES_ENV_POSTGRES_PASSWORD=${PASSWORD}"
+   - "POSTGRES_PASSWORD=${PASSWORD}"
 mongo:
   image: mongo:2.6.11
   container_name: mongo
