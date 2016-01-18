@@ -12,8 +12,8 @@ console.log("env is " + process.env.NODE_ENV);
 console.log("mongo ip: " + config.mongo.ip);
 
 // Database
-var mongo = require('mongodb');
-var db = require('monk')(config.mongo.ip+':27017/assistant');
+var db = config.mongo.monk;
+//var db = require('monk')(config.mongo.ip+':27017/assistant');
 
 
 // routes
@@ -38,12 +38,6 @@ app.use(cookieParser());
 // static mount points, used for javascript images etc..
 app.use('/files',express.static(path.join(__dirname, 'files')));
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Make our db accessible to our router  (Duane doesnt like this.. we should use require(config) instead)
-app.use(function(req,res,next){
-    req.db = db;
-    next();
-});
 
 // connect the routes
 app.use('/', routes);

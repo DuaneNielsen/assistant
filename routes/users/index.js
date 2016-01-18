@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var config = require('config')[process.env.NODE_ENV];
 
 //register the route
 router.get('/', function(req, res){
@@ -10,7 +11,7 @@ router.get('/', function(req, res){
  * GET userlist.
  */
 router.get('/userlist', function(req, res) {
-    var db = req.db;
+    var db = config.mongo.monk;
     var collection = db.get('userlist');
     collection.find({}, {}, function(e, docs) {
         res.json(docs);
@@ -21,7 +22,7 @@ router.get('/userlist', function(req, res) {
  * POST to adduser.
  */
 router.post('/adduser', function(req, res) {
-    var db = req.db;
+    var db = config.mongo.monk;
     var collection = db.get('userlist');
     collection.insert(req.body, function(err, result) {
         res.send(
@@ -38,7 +39,7 @@ router.post('/adduser', function(req, res) {
  * DELETE to deleteuser.
  */
 router.delete('/deleteuser/:id', function(req, res) {
-    var db = req.db;
+    var db = config.mongo.monk;
     var collection = db.get('userlist');
     var userToDelete = req.params.id;
     collection.remove({
