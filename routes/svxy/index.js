@@ -12,6 +12,21 @@ var pgp = require('pg-promise')({promiseLib: promise});
 var conString = config.postgres.connectstring;
 var db = pgp(conString);
 
+// init scheduled jobs
+var grab_job = schedule.scheduleJob('30 11,16,20 * * *', function() {
+    console.log('running grabber job');
+    grabSVXY();
+    console.log('grabber job completed');
+});
+
+// init process jobs
+var process_job = schedule.scheduleJob('31 11,16,20 * * *', function() {
+    console.log('running processor job');
+    processSVXYResults();
+    console.log('processor job completed');
+});
+
+
 /* GET home page. */
 svxy.get('/', function(req, res, next) {
   res.render('svxy', { title: 'SVXY' , scripts: ['javascripts/global.js']});

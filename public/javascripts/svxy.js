@@ -19,7 +19,7 @@ function refresh() {
     // post the fields via ajax to the database
     $.ajax({
         type: 'GET',
-        url: '/users/getSVXY'
+        url: '/svxy/getsvxy'
     }).done( function(response) {
         
         // check the response is good (blank)
