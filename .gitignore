@@ -2,3 +2,4 @@ data/
 files/
 node_modules/*
 !node_modules/config.js
+!node_modules/scheduled_jobs.js

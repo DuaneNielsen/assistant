@@ -2,6 +2,7 @@
 # docker network create assistnet
 # docker volume create mongo-data
 # docker volume create postgres-data
+# letsencrypt
 # and 
 # export PASSWORD=some_password
 

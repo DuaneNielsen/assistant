@@ -12,6 +12,7 @@ var https = require('https');
 var fs = require('fs');
 var path = require('path');
 var config = require('config')[process.env.NODE_ENV];
+var scheduled_jobs = require('scheduled_jobs');
 
 /**
  * Get port from environment and store in Express.
@@ -21,10 +22,16 @@ var port = config.port;
 app.set('port', port);
 
 /**
+ * kick off scheduled jobs
+ */
+
+scheduled_jobs.init();
+
+/**
  * Start up HTTP
  */
 
-console.log("server will listen on " + process.env.IP + ":" + port);
+console.log("server will listen on " + process.env.PORT + ":" + process.env.IP);
 
 // use ssl on prod
 if ( process.env.NODE_ENV === 'production' ) { 
