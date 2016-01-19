@@ -15,7 +15,7 @@ assistant:
    - "POSTGRES_PASSWORD=${PASSWORD}"
    - "PORT=443"
   volumes:
-   - /etc/letsencrypt
+   - /etc/letsencrypt:/etc/letsencrypt
 mongo:
   image: mongo:2.6.11
   container_name: mongo
