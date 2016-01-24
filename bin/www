@@ -13,6 +13,7 @@ var fs = require('fs');
 var path = require('path');
 var config = require('config')[process.env.NODE_ENV];
 var scheduled_jobs = require('scheduled_jobs');
+var Grabber = require('Grabber');
 
 /**
  * Get port from environment and store in Express.
@@ -26,6 +27,50 @@ app.set('port', port);
  */
 
 scheduled_jobs.init();
+var uvxy = new Grabber('https://accounts.profunds.com/etfdata/ByFund/UVXY-psdlyhld.csv', 'uvxy_holdings');
+uvxy.init();
+var vix_model = new Grabber('http://www.kuchita.com/vxx_xiv/vix-funds-models-no-formulas.xls.zip', 'vix_model');
+vix_model.init();
+
+var CFE_F16_VX = new Grabber('http://cfe.cboe.com/Publish/ScheduledTask/MktData/datahouse/CFE_F16_VX.csv','CFE_F16_VX');
+var CFE_G16_VX = new Grabber('http://cfe.cboe.com/Publish/ScheduledTask/MktData/datahouse/CFE_G16_VX.csv','CFE_G16_VX');
+var CFE_H16_VX = new Grabber('http://cfe.cboe.com/Publish/ScheduledTask/MktData/datahouse/CFE_H16_VX.csv','CFE_H16_VX');
+var CFE_J16_VX = new Grabber('http://cfe.cboe.com/Publish/ScheduledTask/MktData/datahouse/CFE_J16_VX.csv','CFE_J16_VX');
+var CFE_K16_VX = new Grabber('http://cfe.cboe.com/Publish/ScheduledTask/MktData/datahouse/CFE_K16_VX.csv','CFE_K16_VX');
+var CFE_M16_VX = new Grabber('http://cfe.cboe.com/Publish/ScheduledTask/MktData/datahouse/CFE_M16_VX.csv','CFE_M16_VX');
+var CFE_N16_VX = new Grabber('http://cfe.cboe.com/Publish/ScheduledTask/MktData/datahouse/CFE_N16_VX.csv','CFE_N16_VX');
+var CFE_Q16_VX = new Grabber('http://cfe.cboe.com/Publish/ScheduledTask/MktData/datahouse/CFE_Q16_VX.csv','CFE_Q16_VX');
+var CFE_U16_VX = new Grabber('http://cfe.cboe.com/Publish/ScheduledTask/MktData/datahouse/CFE_U16_VX.csv','CFE_U16_VX');
+var CFE_V16_VX = new Grabber('http://cfe.cboe.com/Publish/ScheduledTask/MktData/datahouse/CFE_V16_VX.csv','CFE_V16_VX');
+var CFE_X16_VX = new Grabber('http://cfe.cboe.com/Publish/ScheduledTask/MktData/datahouse/CFE_X16_VX.csv','CFE_X16_VX');
+var CFE_Z16_VX = new Grabber('http://cfe.cboe.com/Publish/ScheduledTask/MktData/datahouse/CFE_Z16_VX.csv','CFE_Z16_VX');
+
+CFE_F16_VX.init();
+CFE_G16_VX.init();
+CFE_H16_VX.init();
+CFE_J16_VX.init();
+CFE_K16_VX.init();
+CFE_M16_VX.init();
+CFE_N16_VX.init();
+CFE_Q16_VX.init();
+CFE_U16_VX.init();
+CFE_V16_VX.init();
+CFE_X16_VX.init();
+CFE_Z16_VX.init();
+
+var svpxsp = new Grabber('http://us.spindices.com/idsexport/file.xls?hostIdentifier=48190c8c-42c4-46af-8d1a-0cd5db894797&selectedModule=PerformanceGraphView&selectedSubModule=Graph&yearFlag=tenYearFlag&indexId=11000451',
+    'svpxsp' );
+svpxsp.filename = 'spvxsp.csv';
+svpxsp.init();
+
+var svxspi = new Grabber('http://us.spindices.com/idsexport/file.xls?hostIdentifier=48190c8c-42c4-46af-8d1a-0cd5db894797&selectedModule=PerformanceGraphView&selectedSubModule=Graph&yearFlag=tenYearFlag&indexId=600825',
+    'svxspi' );
+    svxspi.filename = 'svxspi.csv';
+    svxspi.init();
+
+var svxy_dailyquote = new Grabber('http://www.google.com/finance/historical?q=NYSEARCA%3ASVXY&ei=hhugVujgDKWUiQKD_Li4Cw&output=csv', 'svxy_dailyquote');
+svxy_dailyquote.filename = 'svxy_dailyquote.csv';
+svxy_dailyquote.init();
 
 /**
  * Start up HTTP
