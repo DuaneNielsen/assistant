@@ -1,0 +1,1 @@
+mongoexport -h localhost -d assistant -c $1 --csv --fields body -q '{},{body:1}'  --out $1.csv
